@@ -23,6 +23,7 @@ namespace ClientMessenger
         public MainWindow()
         {
             InitializeComponent();
+            
         }
 
         private void BorderMousDown(object sender, MouseButtonEventArgs e)
@@ -36,6 +37,16 @@ namespace ClientMessenger
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void SelectNewUser(object sender, SelectionChangedEventArgs e)
+        {
+            
         }
     }
 }

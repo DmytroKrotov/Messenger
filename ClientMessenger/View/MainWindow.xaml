@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:ClientMessenger" 
         xmlns:viewmodel="clr-namespace:ClientMessenger.ViewModel"
         mc:Ignorable="d"
@@ -86,10 +87,15 @@
             <ListView Background="Transparent"
                       Grid.Row="1"
                       ItemsSource="{Binding Users}"
-                      BorderThickness="0"
-                      
-                      ItemContainerStyle="{StaticResource UserStyle}"/>
-
+                      BorderThickness="0"                     
+                      ItemContainerStyle="{StaticResource UserStyle}"
+                      x:Name="UsersList">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectedUserCommand}" CommandParameter="{Binding ElementName=UsersList}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+             </ListView>
         </Grid>
 
         <Grid Grid.Row="1"
@@ -105,17 +111,31 @@
                         >
                 <TextBox Margin="3,3,3,3" 
                          Width="1000"
-                         Background="Gray">
+                         Background="Gray"
+                         x:Name="TextBoxSendMessage">
                     
                 </TextBox>
 
-                <Button Width="90"
-                        Margin="7,3,3,3" Background="Transparent">
+                <Button Width="96"
+                        Margin="7,3,3,3" 
+                        Background="Transparent"
+                        
+                        Command="{Binding SendMessageCommand}" 
+                        CommandParameter="{Binding ElementName=TextBoxSendMessage}">
                     
 
                 </Button>
 
             </StackPanel>
+            <ListBox  
+                     Grid.Row="0"
+                     Background="Transparent"                    
+                     Margin="8" 
+                     ItemContainerStyle="{StaticResource MessagesStyle}"
+                     ItemsSource="{Binding SelectedUserMessages}"
+                     >
+                
+            </ListBox>
         </Grid>
 
 
