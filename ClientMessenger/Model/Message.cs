@@ -13,5 +13,7 @@ namespace ClientMessenger.Model
         public string Color { get; set; }
         public string MessageData { get; set; }
         public DateTime Time { get; set; }
+
+       
     }
 }

@@ -23,9 +23,34 @@ namespace ClientMessenger.ViewModel
         public string Login { get; set; }
         public string MyColor { get; set; }
         public List<string> Test { get; set; }
-        public User SelectedUser { get; set; }
-        public ObservableCollection<User> Users { get; set; }
-        public ObservableCollection<Message> SelectedUserMessages { get; set; }
+        private User selectedUser;
+
+        public User SelectedUser
+        {
+            get { return selectedUser; }
+            set 
+            { 
+                selectedUser = value;
+                OnPropertyChanged(nameof(SelectedUser));
+            }
+        }
+
+       
+
+        private ObservableCollection<User> users;
+
+        public ObservableCollection<User> Users
+        {
+            get { return users; }
+            set 
+            {
+                users = value; 
+                OnPropertyChanged(nameof(Users));
+            }
+        }
+
+        
+        //public ObservableCollection<Message> SelectedUserMessages { get; set; }
         
         /// <summary>
         /// //////////////////////////////////////////////////////////CTOR//////////////////////////////////////////////////////////////////////////
@@ -39,31 +64,32 @@ namespace ClientMessenger.ViewModel
 
 
 
-            SelectedUserMessages = new ObservableCollection<Message>() { 
-                new Message(){MessageData="sfgrtthgtrhtyh"},
-                new Message(){MessageData="sfgrtthgtsgsghs rhtyh"},
-                new Message(){MessageData="sfg areg rtthgtrhtyh"},
-                new Message(){MessageData="sfgrtt  aerf frgr hgtrhtyh"},
-                new Message(){MessageData="sfgrtt hgtrht yh"},
-                new Message(){MessageData="sfgrtt  hgtrh tyh"},
-            };
+            //SelectedUserMessages = new ObservableCollection<Message>() { 
+            //    new Message(){MessageData="sfgrtthgtrhtyh"},
+            //    new Message(){MessageData="sfgrtthgtsgsghs rhtyh"},
+            //    new Message(){MessageData="sfg areg rtthgtrhtyh"},
+            //    new Message(){MessageData="sfgrtt  aerf frgr hgtrhtyh"},
+            //    new Message(){MessageData="sfgrtt hgtrht yh"},
+            //    new Message(){MessageData="sfgrtt  hgtrh tyh"},
+            //};
             for (int i = 0; i < 6; i++)
             {
                               
                 Users.Add(new User()
                 {
                     Name = $"Friend {i}",
+                    Color=$"#2B20AA"
                    
                 }) ;
             }
 
-            for (int k =  3; k > 0; k--)
-            {
-                SelectedUserMessages.Add(new Message()
-                {
-                    MessageData = "weqrqwretwetegwegtwr wergwet weg wetggggggggggg"
-                });
-            }
+            //for (int k =  3; k > 0; k--)
+            //{
+            //    SelectedUserMessages.Add(new Message()
+            //    {
+            //        MessageData = "weqrqwretwetegwegtwr wergwet weg wetggggggggggg"
+            //    });
+            //}
         }
 
         /// <summary>
@@ -94,7 +120,10 @@ namespace ClientMessenger.ViewModel
             ListView lb=(ListView)obj;
             int selectedIndex = lb.SelectedIndex;
             SelectedUser = Users[selectedIndex];
-            MessageBox.Show(SelectedUser.Name);
+            //SelectedUserMessages = SelectedUser.Messages;
+            //MessageBox.Show();
+
+
         }
 
         private ICommand sendMessageCommand;
@@ -117,15 +146,25 @@ namespace ClientMessenger.ViewModel
             try
             {
                 TextBox textBox = (TextBox)obj;
-                var myNewMessage = new Message()
+                if (SelectedUser!= null) 
                 {
-                    IsMine = true,
-                    UserName = Login,
-                    Color = MyColor,
-                    MessageData = textBox.Text,
-                    Time = DateTime.Now,
-                };
-                SelectedUserMessages.Add(myNewMessage);
+                    
+                    var myNewMessage = new Message()
+                    {
+                        IsMine = true,
+                        UserName = Login,
+                        Color = MyColor,
+                        MessageData = textBox.Text,
+                        Time = DateTime.Now,
+                    };
+                    SelectedUser.Messages.Add(myNewMessage);
+                    textBox.Text = string.Empty;
+                }
+                else
+                {
+                    MessageBox.Show("!!!!!!SELECT USER!!!!!!");
+                }
+                
             }
             catch (Exception ex)
             {

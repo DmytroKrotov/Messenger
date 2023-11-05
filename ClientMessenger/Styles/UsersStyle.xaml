@@ -16,7 +16,7 @@
                             Background="{TemplateBinding Background}">
                         <StackPanel Orientation="Horizontal">
                             <Border Margin="5,5,5,5" 
-                                    Background="Silver"
+                                    Background="{Binding Color}"
                                     Height="25"
                                     Width="25">
                                 

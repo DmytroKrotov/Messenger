@@ -10,6 +10,8 @@
         Title="Messenger" Height="700" Width="1300"
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
+        MinHeight="640"
+        MinWidth="1200"
         Background="#36393F"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen">
@@ -17,7 +19,7 @@
     <Window.DataContext>
         <viewmodel:MainViewModel/>
     </Window.DataContext>
-        
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -27,7 +29,7 @@
             <ColumnDefinition  />
             <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
-        
+
 
         <Border Grid.Column="0" 
                 Grid.Row="0"   
@@ -38,7 +40,7 @@
                 <Label Content="Messenger"
                        Foreground="DarkGray"
                        FontWeight="Bold">
-                    
+
                 </Label>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Width="25" 
@@ -69,11 +71,11 @@
 
         <Grid Grid.Row="1" 
               Grid.Column="1" 
-              Background="#252529">
+              Background="#202529">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition/>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="316"/>
             </Grid.RowDefinitions>
 
             <Label Content="Users"
@@ -87,7 +89,8 @@
             <ListView Background="Transparent"
                       Grid.Row="1"
                       ItemsSource="{Binding Users}"
-                      BorderThickness="0"                     
+                      BorderThickness="1" 
+                      BorderBrush="#393B40"
                       ItemContainerStyle="{StaticResource UserStyle}"
                       x:Name="UsersList">
                 <i:Interaction.Triggers>
@@ -95,7 +98,51 @@
                         <i:InvokeCommandAction Command="{Binding SelectedUserCommand}" CommandParameter="{Binding ElementName=UsersList}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-             </ListView>
+            </ListView>
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="#393B40" >
+                <TabControl x:Name="products"                        
+                        Background="Transparent"
+                        BorderThickness="0">
+                    <TabItem Style="{StaticResource TabItemStyle}"
+                         Width="85"
+                         Background="#FF423C3C">
+                        <TabItem.Header>
+
+                            <Label Content="LogIn"
+                               Background="Transparent"
+                               Foreground="DodgerBlue"/>
+                        </TabItem.Header>
+                        <TabItem.Content>
+                            <StackPanel>
+                                <Label Content="Name" HorizontalAlignment="Center" Foreground="Gray"/>
+                                <TextBox Margin="12,2,12,2" Background="Transparent"/>
+                                <Label Content="Password" HorizontalAlignment="Center" Foreground="Gray"/>
+                                <TextBox Margin="12,2,12,2" Background="Transparent"/>
+                                <Button Content="LogIn" Margin="50,5,50,2" Background="Transparent" Foreground="DodgerBlue"/>
+                            </StackPanel>
+                        </TabItem.Content>
+                    </TabItem>
+                    <TabItem Style="{StaticResource TabItemStyle}"
+                         Width="85">
+                        <TabItem.Header>
+                            <Label Content="Regstration"
+                               Foreground="DodgerBlue"/>
+                        </TabItem.Header>
+                        <StackPanel>
+                            <Label Content="Name" HorizontalAlignment="Center" Foreground="Gray"/>
+                            <TextBox Margin="12,2,12,2" Background="Transparent"/>
+                            <Label Content="Password" HorizontalAlignment="Center" Foreground="Gray"/>
+                            <TextBox Margin="12,2,12,2" Background="Transparent"/>
+                            <Label Content="Color" HorizontalAlignment="Center" Foreground="Gray"/>
+                            <ComboBox Margin="12,2,12,2" Background="Transparent">
+               
+                            </ComboBox>
+                            <Button Content="Register" Margin="50,5,50,2" Background="Transparent" Foreground="DodgerBlue"/>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+            </Border>
+
         </Grid>
 
         <Grid Grid.Row="1"
@@ -105,36 +152,37 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <StackPanel Margin="5"
-                        Grid.Row="1"
-                        Orientation="Horizontal"
-                        >
-                <TextBox Margin="3,3,3,3" 
-                         Width="1000"
-                         Background="Gray"
-                         x:Name="TextBoxSendMessage">
-                    
+            <Grid Grid.Row="1"
+                  Background="#252529">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBox Margin="8,15,3,15" 
+                         Background="Transparent"
+                         x:Name="TextBoxSendMessage"
+                         Grid.Column="0"
+                         FontSize="14"
+                         Foreground="LightSkyBlue"
+                         BorderBrush="AliceBlue">
                 </TextBox>
 
-                <Button Width="96"
-                        Margin="7,3,3,3" 
-                        Background="Transparent"
-                        
+                <Button Margin="7,3,3,3"                                                 
                         Command="{Binding SendMessageCommand}" 
-                        CommandParameter="{Binding ElementName=TextBoxSendMessage}">
-                    
-
+                        Style="{StaticResource ButtonStyle}"
+                        CommandParameter="{Binding ElementName=TextBoxSendMessage}" 
+                        Grid.Column="1" >
                 </Button>
+            </Grid>
 
-            </StackPanel>
-            <ListBox  
-                     Grid.Row="0"
+            <ListBox Grid.Row="0"
                      Background="Transparent"                    
                      Margin="8" 
                      ItemContainerStyle="{StaticResource MessagesStyle}"
-                     ItemsSource="{Binding SelectedUserMessages}"
+                     ItemsSource="{Binding SelectedUser.Messages, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                     BorderThickness="0"
                      >
-                
+
             </ListBox>
         </Grid>
 
