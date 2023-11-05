@@ -120,11 +120,106 @@ namespace ClientMessenger.ViewModel
             ListView lb=(ListView)obj;
             int selectedIndex = lb.SelectedIndex;
             SelectedUser = Users[selectedIndex];
-            //SelectedUserMessages = SelectedUser.Messages;
-            //MessageBox.Show();
+        }
 
+
+
+        private ICommand closeWindowCommand;
+        public ICommand CloseWindowCommand
+        {
+            get
+            {
+                if (closeWindowCommand == null)
+                    closeWindowCommand = new RelayCommand(CloseWindowCommandMethod, CanExecuteCloseWindowCommandMethod);
+                return closeWindowCommand;
+            }
 
         }
+        private bool CanExecuteCloseWindowCommandMethod(object obj)
+        {
+            return true;
+        }
+        private void CloseWindowCommandMethod(object obj)
+        {
+            Application.Current.Shutdown();
+        }
+
+
+
+        private ICommand minWindowCommand;
+        public ICommand MinWindowCommand
+        {
+            get
+            {
+                if (minWindowCommand == null)
+                    minWindowCommand = new RelayCommand(MinWindowCommandMethod, CanExecuteMinWindowCommandMethod);
+                return minWindowCommand;
+            }
+
+        }
+        private bool CanExecuteMinWindowCommandMethod(object obj)
+        {
+            return true;
+        }
+        private void MinWindowCommandMethod(object obj)
+        {
+            Application.Current.MainWindow.WindowState= WindowState.Minimized;  
+        }
+
+
+        private ICommand maxWindowCommand;
+        public ICommand MaxWindowCommand
+        {
+            get
+            {
+                if (maxWindowCommand == null)
+                    maxWindowCommand = new RelayCommand(MaxWindowCommandMethod, CanExecuteMaxWindowCommandMethod);
+                return maxWindowCommand;
+            }
+
+        }
+        private bool CanExecuteMaxWindowCommandMethod(object obj)
+        {
+            return true;
+        }
+        private void MaxWindowCommandMethod(object obj)
+        {
+            if(Application.Current.MainWindow.WindowState!=WindowState.Maximized)
+            {
+                Application.Current.MainWindow.WindowState=WindowState.Maximized;
+            }
+            else
+            {
+                Application.Current.MainWindow.WindowState = WindowState.Normal;
+            }
+        }
+
+
+
+        //private ICommand dragMoveWindowCommand;
+        //public ICommand DragMoveWindowCommand
+        //{
+        //    get
+        //    {
+        //        if (dragMoveWindowCommand == null)
+        //            dragMoveWindowCommand = new RelayCommand(DragMoveWindowCommandMethod, CanExecuteDragMoveWindowCommandMethod);
+        //        return dragMoveWindowCommand;
+        //    }
+
+        //}
+        //private bool CanExecuteDragMoveWindowCommandMethod(object obj)
+        //{
+        //    return true;
+        //}
+        //private void DragMoveWindowCommandMethod(object obj)
+        //{
+        //    if (e.LeftButton == MouseButtonState.Pressed)
+        //    {
+        //        DragMove();
+        //    }
+        //}
+
+
 
         private ICommand sendMessageCommand;
         public ICommand SendMessageCommand

@@ -36,6 +36,7 @@
                 Grid.ColumnSpan="2"
                 Background="#242525"
                 MouseDown="BorderMousDown">
+            
             <Grid>
                 <Label Content="Messenger"
                        Foreground="DarkGray"
@@ -48,23 +49,37 @@
                             Background="Transparent"
                             Foreground="CornflowerBlue"
                             Content="_"
-                            BorderThickness="0"
-                            />
+                            BorderThickness="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding MinWindowCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
                     <Button Width="25" 
                             Height="25" 
                             Background="Transparent"
                             Foreground="CornflowerBlue"
                             Content="O"
-                            BorderThickness="0"
-                            />
+                            BorderThickness="0">
+                        <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding MaxWindowCommand}"/>
+                        </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
                     <Button Width="25" 
                             Height="25" 
                             Background="Transparent"
                             Foreground="CornflowerBlue"
                             Content="X"
-                            BorderThickness="0"
-                            Click="ButtonClose_Click"
-                            />
+                            BorderThickness="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding CloseWindowCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>

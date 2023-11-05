@@ -33,12 +33,6 @@ namespace ClientMessenger
                 DragMove();
             }
         }
-
-        private void ButtonClose_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
-
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
