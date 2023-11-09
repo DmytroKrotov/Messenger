@@ -1,8 +1,10 @@
-﻿using ClientMessenger.Model;
+﻿using ClientMessenger.CommunicationItems;
+using ClientMessenger.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml.Linq;
 using WPFEvents.Infrastructure;
 
 namespace ClientMessenger.ViewModel
@@ -20,7 +23,15 @@ namespace ClientMessenger.ViewModel
         /// //////////////////////////////////////////////////////////PROPERTY///////////////////////////////////////////////////////////////////////
         /// </summary>
         /// 
+        Client clnt;
+
+        
+
         public string Login { get; set; }
+        public string RegistrationLogin { get; set; }
+
+        public string  Password { get; set; }
+        public string  RegistrationPassword { get; set; }
         public string MyColor { get; set; }
         public List<string> Test { get; set; }
         private User selectedUser;
@@ -60,36 +71,9 @@ namespace ClientMessenger.ViewModel
             Users = new ObservableCollection<User>();
             Login = "Dima";
             MyColor = "#F4A460";
-
-
-
-
-            //SelectedUserMessages = new ObservableCollection<Message>() { 
-            //    new Message(){MessageData="sfgrtthgtrhtyh"},
-            //    new Message(){MessageData="sfgrtthgtsgsghs rhtyh"},
-            //    new Message(){MessageData="sfg areg rtthgtrhtyh"},
-            //    new Message(){MessageData="sfgrtt  aerf frgr hgtrhtyh"},
-            //    new Message(){MessageData="sfgrtt hgtrht yh"},
-            //    new Message(){MessageData="sfgrtt  hgtrh tyh"},
-            //};
-            for (int i = 0; i < 6; i++)
-            {
-                              
-                Users.Add(new User()
-                {
-                    Name = $"Friend {i}",
-                    Color=$"#2B20AA"
-                   
-                }) ;
-            }
-
-            //for (int k =  3; k > 0; k--)
-            //{
-            //    SelectedUserMessages.Add(new Message()
-            //    {
-            //        MessageData = "weqrqwretwetegwegtwr wergwet weg wetggggggggggg"
-            //    });
-            //}
+            clnt=new Client();
+            clnt.MessageReceived += AddMessage;
+            
         }
 
         /// <summary>
@@ -195,29 +179,54 @@ namespace ClientMessenger.ViewModel
         }
 
 
+        private ICommand logInCommand;
+        public ICommand LogInCommand
+        {
+            get
+            {
+                if (logInCommand == null)
+                    logInCommand = new RelayCommand(LogInCommandMethod, CanExecuteLogInCommandMethod);
+                return logInCommand;
+            }
 
-        //private ICommand dragMoveWindowCommand;
-        //public ICommand DragMoveWindowCommand
-        //{
-        //    get
-        //    {
-        //        if (dragMoveWindowCommand == null)
-        //            dragMoveWindowCommand = new RelayCommand(DragMoveWindowCommandMethod, CanExecuteDragMoveWindowCommandMethod);
-        //        return dragMoveWindowCommand;
-        //    }
+        }
+        private bool CanExecuteLogInCommandMethod(object obj)
+        {
+            return true;
+        }
+        private void LogInCommandMethod(object obj)
+        {
 
-        //}
-        //private bool CanExecuteDragMoveWindowCommandMethod(object obj)
-        //{
-        //    return true;
-        //}
-        //private void DragMoveWindowCommandMethod(object obj)
-        //{
-        //    if (e.LeftButton == MouseButtonState.Pressed)
-        //    {
-        //        DragMove();
-        //    }
-        //}
+            _ = clnt.ConnectAsync("127.0.0.1", 12345);
+            _ = clnt.SendAsync($"LOGIN|{Login}|Server|{Password}");
+
+        }
+
+        private ICommand registrationCommand;
+        public ICommand RegistrationCommand
+        {
+            get
+            {
+                if (registrationCommand == null)
+                    registrationCommand = new RelayCommand(RegistrationCommandMethod, CanExecuteRegistrationCommandMethod);
+                return registrationCommand;
+            }
+
+        }
+        private bool CanExecuteRegistrationCommandMethod(object obj)
+        {
+            return true;
+        }
+        private void RegistrationCommandMethod(object obj)
+        {
+
+            _ = clnt.ConnectAsync("127.0.0.1", 12345);
+            _ = clnt.SendAsync($"REGISTER|{RegistrationLogin}|Server|{RegistrationPassword}");
+
+        }
+
+
+
 
 
 
@@ -246,13 +255,14 @@ namespace ClientMessenger.ViewModel
                     
                     var myNewMessage = new Message()
                     {
-                        IsMine = true,
-                        UserName = Login,
+                        Sender = Login,
+                        UserName = SelectedUser.Name,
                         Color = MyColor,
                         MessageData = textBox.Text,
                         Time = DateTime.Now,
                     };
                     SelectedUser.Messages.Add(myNewMessage);
+                    _=clnt.SendAsync($"SEND|{Login}|{SelectedUser.Name}|{myNewMessage.MessageData}");
                     textBox.Text = string.Empty;
                 }
                 else
@@ -276,6 +286,56 @@ namespace ClientMessenger.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+
+        void AddMessage(string IncomeMessage)
+        {
+            
+            var parsedMessage = MessageHandler.ParseIncomeMessage(IncomeMessage);
+            
+
+
+            var command = parsedMessage.Command;
+
+            switch (command)
+            {
+                case "ADDUSER":
+                    {
+                        var userToAdd = new User()
+                        {
+                            Name = parsedMessage.Message,
+                            Color = "#393939"
+
+                        };
+                        users.Add(userToAdd);
+                        break;
+                    }
+                case "INCOME":
+                    {
+                        var messageToAdd = new Message()
+                        {
+                            Sender = parsedMessage.Sender,
+                            UserName = parsedMessage.Recipient,
+                            Color = "#131313",
+                            MessageData = parsedMessage.Message,
+                            Time = DateTime.Now
+                        };
+                        users.First((x) => x.Name == parsedMessage.Sender).Messages.Add(messageToAdd);
+                        break;
+                    }
+
+                default:
+
+                    break;
+            }
+            
+        }
+
+
+        //////////////////////////////////////////////classes////////////////////////////////////////////////////////
+        ///
+
+        
 
     }
 }

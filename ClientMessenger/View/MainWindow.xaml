@@ -20,7 +20,9 @@
         <viewmodel:MainViewModel/>
     </Window.DataContext>
 
-    <Grid>
+    
+
+<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition/>
@@ -130,10 +132,17 @@
                         <TabItem.Content>
                             <StackPanel>
                                 <Label Content="Name" HorizontalAlignment="Center" Foreground="Gray"/>
-                                <TextBox Margin="12,2,12,2" Background="Transparent"/>
+                                <TextBox Margin="12,2,12,2" Background="Transparent" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                 <Label Content="Password" HorizontalAlignment="Center" Foreground="Gray"/>
-                                <TextBox Margin="12,2,12,2" Background="Transparent"/>
-                                <Button Content="LogIn" Margin="50,5,50,2" Background="Transparent" Foreground="DodgerBlue"/>
+                                <TextBox Margin="12,2,12,2" Background="Transparent" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <Button Content="LogIn" 
+                                        Margin="50,5,50,2" 
+                                        Background="Transparent" 
+                                        Foreground="DodgerBlue"
+                                        Command="{Binding LogInCommand}">
+                                    
+                                </Button>
+
                             </StackPanel>
                         </TabItem.Content>
                     </TabItem>
@@ -145,14 +154,14 @@
                         </TabItem.Header>
                         <StackPanel>
                             <Label Content="Name" HorizontalAlignment="Center" Foreground="Gray"/>
-                            <TextBox Margin="12,2,12,2" Background="Transparent"/>
+                            <TextBox Margin="12,2,12,2" Background="Transparent" Text="{Binding RegistrationLogin, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             <Label Content="Password" HorizontalAlignment="Center" Foreground="Gray"/>
-                            <TextBox Margin="12,2,12,2" Background="Transparent"/>
+                            <TextBox Margin="12,2,12,2" Background="Transparent" Text="{Binding RegistrationPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             <Label Content="Color" HorizontalAlignment="Center" Foreground="Gray"/>
                             <ComboBox Margin="12,2,12,2" Background="Transparent">
                
                             </ComboBox>
-                            <Button Content="Register" Margin="50,5,50,2" Background="Transparent" Foreground="DodgerBlue"/>
+                            <Button Content="Register" Margin="50,5,50,2" Background="Transparent" Foreground="DodgerBlue"  Command="{Binding RegistrationCommand}"/>
                         </StackPanel>
                     </TabItem>
                 </TabControl>
